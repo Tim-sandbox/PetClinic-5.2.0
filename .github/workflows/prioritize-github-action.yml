@@ -26,12 +26,6 @@ jobs:
             WS_APIKEY: ${{secrets.APIKEY}}
             WS_USERKEY: ${{secrets.USERKEY}}
           run: |
-            cat <<EOF > frameworks.txt
-            org.springframework:spring-web
-            org.springframework:spring-core
-            EOF
-            cat frameworks.txt
-            echo frameworks.txt created successfully
             cat <<EOF > eua.config
             apiKey=$WS_APIKEY
             userKey=$WS_USERKEY
@@ -45,8 +39,6 @@ jobs:
             maven.aggregateModules=true
             fileSystemScan=false
             generateProjectDetailsJson=true
-            analyzeFrameworks=true
-            analyzeFrameworks=./frameworks.txt
             includes=**/*.jar
             EOF
             cat eua.config
@@ -57,4 +49,4 @@ jobs:
             java -jar wss-unified-agent.jar -d ./ -analyzeMultiModule multimodule.txt
             echo 'multimodule.txt contents'
             cat multimodule.txt
-            java -jar xModuleAnalyzer.jar -xModulePath multimodule.txt -fsaJarPath ./wss-unified-agent.jar -c ./eua.config -aggregateModules true -project PC-5.2.0-scan-framework -projectVersion 1.0
+            java -jar xModuleAnalyzer.jar -xModulePath multimodule.txt -fsaJarPath ./wss-unified-agent.jar -c ./eua.config -aggregateModules true -project PC-5.2.0-no-framework -projectVersion 1.0
