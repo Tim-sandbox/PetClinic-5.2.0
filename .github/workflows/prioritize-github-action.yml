@@ -37,7 +37,7 @@ jobs:
             userKey=$WS_USERKEY
             productName=GH_${{ github.event.repository.name }}
             projectName=${{ github.ref }}_scan_Frame_Pri
-            projectVersion=1
+            projectVersion=2
             enableImpactAnalysis=true
             requireKnownSha1=false
             resolveAllDependencies=false
@@ -57,4 +57,4 @@ jobs:
             java -jar wss-unified-agent.jar -d ./ -analyzeMultiModule multimodule.txt
             echo 'multimodule.txt contents'
             cat multimodule.txt
-            java -jar xModuleAnalyzer.jar -xModulePath multimodule.txt -fsaJarPath ./wss-unified-agent.jar -c ./eua.config -aggregateModules true
+            java -jar xModuleAnalyzer.jar -xModulePath multimodule.txt -fsaJarPath ./wss-unified-agent.jar -c ./eua.config -aggregateModules true -project PC-5.2.0-scan-framework -projectVersion 1.0
