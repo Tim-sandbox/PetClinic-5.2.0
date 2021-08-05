@@ -22,16 +22,30 @@ jobs:
         run: mvn clean install -DskipTests=true
       - name: WhiteSource Unified Agent Scan
         env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
           WS_APIKEY: ${{secrets.APIKEY}}
           WS_USERKEY: ${{secrets.USERKEY}}
+          WS_PRODUCTNAME: PetClinic-frameworks
+          WS_PROJECTNAME: PetC-with-scan
+          WS_PROJECTVERSION: 1
         run: |
+          cat <<EOF > frameworks.txt
+          org.springframework:spring-web
+          org.springframework:spring-core
+          EOF
+          cat frameworks.txt
+          echo Unified Agent downloaded successfully
+          WARFILE=$(find ./ -type f -wholename "*/target/*.war")
+          export WS_ANALYZEFRAMEWORKS=true
+          export WS_FILESYSTEMSCAN=false
+          export WS_ANALYZEFRAMEWORKSREFERENCE=./frameworks.txt
+          java -jar wss-unified-agent.jar -appPath $WARFILE -d ./ -product GH_${{ github.event.repository.name }} -project ${{ github.ref }}_PrioritizeFramework
+
           cat <<EOF > eua.config
           apiKey=$WS_APIKEY
           userKey=$WS_USERKEY
-          product Name=GH_${{ github.event.repository.name }}
-          projectName=${{ github.ref }}_scan_Frame_Pri
-          projectVersion=2
+          product $WS_PRODUCTNAME
+          projectName=$WS_PROJECTNAME
+          projectVersion=$WS_PROJECTVERSION
           enableImpactAnalysis=true
           requireKnownSha1=false
           resolveAllDependencies=false
@@ -39,6 +53,9 @@ jobs:
           maven.aggregateModules=true
           fileSystemScan=false
           generateProjectDetailsJson=true
+          analyzeFrameworks=true
+          fileSystemScan=false
+          analyzeFrameworksReference=./frameworks.txt
           includes=**/*.jar
           EOF
           cat eua.config
@@ -49,4 +66,4 @@ jobs:
           java -jar wss-unified-agent.jar -d ./ -analyzeMultiModule multimodule.txt
           echo 'multimodule.txt contents'
           cat multimodule.txt
-          java -jar xModuleAnalyzer.jar -xModulePath multimodule.txt -fsaJarPath ./wss-unified-agent.jar -c ./eua.config -aggregateModules true -project PC-5.2.0-no-framework -projectVersion 1.0
+          java -jar xModuleAnalyzer.jar -xModulePath multimodule.txt -fsaJarPath ./wss-unified-agent.jar -c ./eua.config -aggregateModules true
