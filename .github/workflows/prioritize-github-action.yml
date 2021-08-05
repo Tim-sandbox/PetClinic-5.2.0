@@ -38,8 +38,6 @@ jobs:
           export WS_ANALYZEFRAMEWORKS=true
           export WS_FILESYSTEMSCAN=false
           export WS_ANALYZEFRAMEWORKSREFERENCE=./frameworks.txt
-          java -jar wss-unified-agent.jar -appPath $WARFILE -d ./ -product GH_${{ github.event.repository.name }} -project ${{ github.ref }}_PrioritizeFramework
-
           cat <<EOF > eua.config
           apiKey=$WS_APIKEY
           userKey=$WS_USERKEY
