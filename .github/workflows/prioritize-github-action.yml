@@ -21,32 +21,32 @@ jobs:
       - name: Build with Maven
         run: mvn clean install -DskipTests=true
       - name: WhiteSource Unified Agent Scan
-          env:
-            GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-            WS_APIKEY: ${{secrets.APIKEY}}
-            WS_USERKEY: ${{secrets.USERKEY}}
-          run: |
-            cat <<EOF > eua.config
-            apiKey=$WS_APIKEY
-            userKey=$WS_USERKEY
-            productName=GH_${{ github.event.repository.name }}
-            projectName=${{ github.ref }}_scan_Frame_Pri
-            projectVersion=2
-            enableImpactAnalysis=true
-            requireKnownSha1=false
-            resolveAllDependencies=false
-            maven.resolveDependencies=true
-            maven.aggregateModules=true
-            fileSystemScan=false
-            generateProjectDetailsJson=true
-            includes=**/*.jar
-            EOF
-            cat eua.config
-            echo config created successfully
-            curl -LJO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
-            curl -o xModuleAnalyzer.jar https://unified-agent.s3.amazonaws.com/xModuleAnalyzer/xModuleAnalyzer-21.7.1.jar
-            echo Unified Agent downloaded successfully
-            java -jar wss-unified-agent.jar -d ./ -analyzeMultiModule multimodule.txt
-            echo 'multimodule.txt contents'
-            cat multimodule.txt
-            java -jar xModuleAnalyzer.jar -xModulePath multimodule.txt -fsaJarPath ./wss-unified-agent.jar -c ./eua.config -aggregateModules true -project PC-5.2.0-no-framework -projectVersion 1.0
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          WS_APIKEY: ${{secrets.APIKEY}}
+          WS_USERKEY: ${{secrets.USERKEY}}
+        run: |
+          cat <<EOF > eua.config
+          apiKey=$WS_APIKEY
+          userKey=$WS_USERKEY
+          product Name=GH_${{ github.event.repository.name }}
+          projectName=${{ github.ref }}_scan_Frame_Pri
+          projectVersion=2
+          enableImpactAnalysis=true
+          requireKnownSha1=false
+          resolveAllDependencies=false
+          maven.resolveDependencies=true
+          maven.aggregateModules=true
+          fileSystemScan=false
+          generateProjectDetailsJson=true
+          includes=**/*.jar
+          EOF
+          cat eua.config
+          echo config created successfully
+          curl -LJO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
+          curl -o xModuleAnalyzer.jar https://unified-agent.s3.amazonaws.com/xModuleAnalyzer/xModuleAnalyzer-21.7.1.jar
+          echo Unified Agent downloaded successfully
+          java -jar wss-unified-agent.jar -d ./ -analyzeMultiModule multimodule.txt
+          echo 'multimodule.txt contents'
+          cat multimodule.txt
+          java -jar xModuleAnalyzer.jar -xModulePath multimodule.txt -fsaJarPath ./wss-unified-agent.jar -c ./eua.config -aggregateModules true -project PC-5.2.0-no-framework -projectVersion 1.0
